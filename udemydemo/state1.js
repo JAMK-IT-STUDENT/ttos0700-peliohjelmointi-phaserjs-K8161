@@ -28,7 +28,6 @@ demo.state1.prototype = {
         knight = game.add.sprite(300,200, 'knight');
         knight.scale.setTo(3.5, 3.5);
         game.physics.enable(knight);
-        
         cursors = game.input.keyboard.createCursorKeys();
     },
     update: function(){
