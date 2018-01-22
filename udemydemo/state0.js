@@ -1,35 +1,59 @@
 var demo = {};
 var centerX = 1500 / 2;
 var centerY = 1000 / 2;
-var venom;
-var speed = 4;
+var knight;
+var speed = 6;
 demo.state0 = function(){};
 demo.state0.prototype = {
     preload: function(){
-        game.load.image('venom', 'assets/sprites/Venom.png');
+        //game.load.image('knight', 'assets/sprites/Venom.png');
+        game.load.spritesheet('knight', 'assets/spritesheets/rogue.png', 32, 32.2);
+        game.load.image('forest', 'assets/background/forest.png');
     },
     create: function(){
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         game.stage.backgroundColor = '#80ff80';
         console.log('state0');       
         addChangeStateEventListeners();
+        game.world.setBounds(0, 0, 3740, 2800)
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         
-        venom = game.add.sprite(centerX, centerY, 'venom')
-        venom.anchor.setTo(0.5, 0.5);
+        var forest = game.add.sprite(0,0, 'forest');
         
+        knight = game.add.sprite(centerX, centerY + 900,'knight')
+        knight.anchor.setTo(0.5, 0.5);
+        knight.scale.setTo(4.5, 4.5);
+        game.physics.enable(knight);
+        knight.body.collideWorldBounds = true;
+        knight.animations.add('walk', [20, 21, 22, 23, 24, 25, 26, 27, 28, 29])
+        
+        game.camera.follow(knight);
+        game.camera.deadzone = new Phaser. Rectangle(centerX - 300, 0, 600, 1000);
     },
     update: function(){
         if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-            venom.x += speed;
+            knight.scale.setTo(4.5, 4.5);
+            knight.x += speed;
+            knight.animations.play('walk', 14, true);
         }
         else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
-            venom.x -= speed;
+            knight.scale.setTo(-4.5, 4.5);
+            knight.x -= speed;
+            knight.animations.play('walk', 14, true);
+        }
+        else {
+            knight.animations.stop('walk');
+            knight.frame = 0;
         }
         if(game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            venom.y -= speed;
+            knight.y -= speed;
+            if (knight.y < 1013)
+                {
+                    knight.y = 1013;
+                }
         }
         else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-            venom.y += speed;
+            knight.y += speed;
         }
     }
 };
